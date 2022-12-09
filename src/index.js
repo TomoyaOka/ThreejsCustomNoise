@@ -1,6 +1,14 @@
 import * as THREE from "three";
-import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
-import { gsap, Power4 } from "gsap";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import fragment from "./shaders/fragment.glsl?raw";
+import vertex from "./shaders/vertex.glsl?raw";
+import fragment02 from "./shaders/fragment02.glsl?raw";
+import vertex02 from "./shaders/vertex02.glsl?raw";
+
+import { DotScreenShader } from "./CustomShader";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
 class App {
   /**
@@ -33,7 +41,7 @@ class App {
       far: 20000.0,
       x: 0.0,
       y: 0.0,
-      z: 40.0,
+      z: 0.5,
       lookAt: new THREE.Vector3(0.0, 0.0, 0.0),
     };
   }
@@ -50,6 +58,8 @@ class App {
     this.mesh;
     this.array = [];
     this.group;
+    this.controls;
+    this.composer;
 
     this.ambientLight;
     this.directionalLight;
@@ -66,9 +76,10 @@ class App {
   }
 
   _setRenderer() {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setClearColor(new THREE.Color(App.RENDERER_SETTING.clearColor));
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setClearColor(0xdad4cc, 1);
     this.renderer.setSize(App.RENDERER_SETTING.width, App.RENDERER_SETTING.height);
+    // this.composer.setSize(App.RENDERER_SETTING.width, App.RENDERER_SETTING.height);
     const canvas = document.querySelector("#webgl");
     canvas.appendChild(this.renderer.domElement);
   }
@@ -82,81 +93,74 @@ class App {
     this.camera.position.set(App.CAMERA_PARAM.x, App.CAMERA_PARAM.y, App.CAMERA_PARAM.z);
     this.camera.lookAt(App.CAMERA_PARAM.lookAt);
     this.camera.updateProjectionMatrix();
-  }
-
-  _setGeometory(geo) {
-    const particleNumber = 50000; //パーティクルの数
-    const material = new THREE.MeshBasicMaterial();
-    const mesh = new THREE.Mesh(geo, material);
-    const sampler = new MeshSurfaceSampler(mesh).build(); //メッシュ表面上にランダムに頂点を付与する
-    const particles = new Float32Array(particleNumber * 3);
-
-    for (let i = 0; i < particleNumber; i++) {
-      const vertex = new THREE.Vector3();
-      sampler.sample(vertex, new THREE.Vector3());
-      const x = vertex.x;
-      const y = vertex.y;
-      const z = vertex.z;
-      particles.set([x, y, z], i * 3);
-    }
-    return particles;
+    this.controls = new OrbitControls(this.camera, document.body);
   }
 
   _setMesh() {
-    const allPointsBox = this._setGeometory(new THREE.BoxGeometry(10, 10, 10)); //Boxジオメトリの頂点座標が入った変数
-    const allPointsCube = this._setGeometory(new THREE.SphereGeometry(10, 32, 32)); //Sphereジオメトリの頂点座標が入った変数
+    this.loader = new THREE.TextureLoader();
+    this.texture = this.loader.load("../public/img.jpg");
+    this.geometry = new THREE.PlaneGeometry(3, 2, 100, 100);
 
-    this.geometry = new THREE.BufferGeometry();
-    this.geometry.setAttribute("position", new THREE.BufferAttribute(allPointsBox, 3));
-    this.geometry.setAttribute("two", new THREE.BufferAttribute(allPointsCube, 3));
-
-    this.material = new THREE.RawShaderMaterial({
-      vertexShader: document.querySelector("#vertex").textContent,
-      fragmentShader: document.querySelector("#fragment").textContent,
+    this.material = new THREE.ShaderMaterial({
       uniforms: {
-        uPoint01: { value: 0.0 },
+        uTime: { value: 0.0 },
+        uTexture: { value: this.texture },
+        uImageAspect: { value: 1920 / 1280 }, // 画像のアスペクト
+        uPlaneAspect: { value: 800 / 500 }, // プレーンのアスペクト
       },
-      transparent: true,
-      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      vertexShader: vertex,
+      fragmentShader: fragment,
     });
-
-    this.mesh = new THREE.Points(this.geometry, this.material);
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    // this.mesh.rotation.z = 0.2;
     this.scene.add(this.mesh);
   }
 
-  _gsapAnimations() {
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
-    tl.to(this.mesh.material.uniforms.uPoint01, {
-      value: 4.0,
-      ease: "Power4.easeOut",
-      duration: 5,
-    })
-      .to(this.mesh.material.uniforms.uPoint01, {
-        value: 1.0,
-        ease: "Power4.easeOut",
-        duration: 1,
-      })
-      .to(this.mesh.material.uniforms.uPoint01, {
-        value: 0.0,
-        ease: "Power4.easeOut",
-        duration: 1,
-      });
+  _setBox() {
+    // this.Boxgeometry = new THREE.CircleGeometry(0.2, 520);
+    this.Boxgeometry = new THREE.SphereGeometry(0.2, 200, 200, 200);
+    this.Boxmaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0.0 },
+      },
+      side: THREE.DoubleSide,
+      vertexShader: vertex02,
+      fragmentShader: fragment02,
+      // wireframe: true,
+    });
+    this.Boxmesh = new THREE.Mesh(this.Boxgeometry, this.Boxmaterial);
+    this.Boxmesh.position.z = 0.01;
+    this.scene.add(this.Boxmesh);
+  }
+
+  initPost() {
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(new RenderPass(this.scene, this.camera));
+    const effect1 = new ShaderPass(DotScreenShader);
+    effect1.uniforms["scale"].value = 4;
+    this.composer.addPass(effect1);
   }
 
   init() {
     this._setRenderer();
     this._setScene();
     this._setCamera();
-    this._setMesh();
-    this._gsapAnimations();
+    // this._setMesh();
+    this._setBox();
+    this.initPost();
   }
 
   render() {
     requestAnimationFrame(this.render);
-    this.mesh.rotation.x += 0.001;
-    this.mesh.rotation.y += 0.001;
+    this.controls.update();
+    // this.mesh.material.uniforms.uTime.value += 0.005;
+    this.Boxmaterial.uniforms.uTime.value += 0.002;
+    this.Boxmesh.rotation.x += 0.001;
+    this.Boxmesh.rotation.y += 0.001;
 
-    this.renderer.render(this.scene, this.camera);
+    // this.renderer.render(this.scene, this.camera);
+    this.composer.render(this.scene, this.camera);
   }
 
   onResize() {

@@ -4,50 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ThreeJsParticleBox</title>
+    <title>ThreeJsImage</title>
     <link rel="stylesheet" href="src/reset.css" />
     <link rel="stylesheet" href="src/index.css" />
-    <style>
-      /* * {
-        cursor: url("/pointer.cur"), auto;
-      }
-      *:hover {
-        cursor: url("/pointer.cur"), auto;
-      } */
-    </style>
   </head>
   <body>
     <div id="webgl"></div>
-    <!-- vertexShader -->
-    <script id="vertex" type="x-shader/x-vertex">
-      attribute vec3 position;
-      attribute vec3 two;
-      uniform float uPoint01;
-      uniform mat4 modelViewMatrix;
-      uniform mat4 projectionMatrix;
+    <canvas id="canvas"></canvas>
 
-      void main() {
-      //mix関数で線形補完
-       vec3 morphing = mix(position, two, uPoint01);
-
-       gl_Position = projectionMatrix * modelViewMatrix * vec4(morphing, 1.0 );
-       gl_PointSize = 3.0;
-      }
-    </script>
-
-    <!-- fragmentShader -->
-    <script id="fragment" type="x-shader/x-fragment">
-      precision mediump float;
-
-      void main() {
-          vec2 temp = gl_PointCoord - vec2(0.5);
-          float f = dot(temp, temp);
-          if (f > 0.8 ) {
-              discard;
-          }
-          gl_FragColor = vec4(0.3, 0.6, 1.0, 1.0);
-      }
-    </script>
     <script type="module" src="/src/index.js"></script>
   </body>
 </html>
