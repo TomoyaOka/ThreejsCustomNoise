@@ -1,0 +1,100 @@
+@font-face {
+  font-family: "fonts";
+  src: url("../../fonts/Season.woff") format("woff"), url("../../fonts/Season.woff2") format("woff2");
+}
+body,
+html {
+  width: 100%;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  background-color: #000;
+  font-size: calc(10 / 1440 * 100vw);
+  font-family: "fonts", sans-serif;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+  touch-action: manipulation;
+}
+@media (max-width: 767px) {
+  body,
+  html {
+    font-size: 62.5%;
+  }
+}
+
+::selection {
+  background-color: #ccc;
+}
+
+.cursor {
+  border-radius: 100vmax;
+  border: 1px rgb(161, 161, 161) solid;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  transition: transform 0.35s ease;
+}
+@media (max-width: 767px) {
+  .cursor {
+    display: none;
+    opacity: 0;
+  }
+}
+
+.--hide {
+  display: inline-block;
+  height: fit-content;
+  position: relative;
+  overflow: hidden;
+  padding: 0.5rem 0;
+}
+
+.--down {
+  position: relative;
+  display: block;
+  transform: translateY(300%) rotate(25deg);
+}
+
+#webgl,
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: -2;
+}
+
+img {
+  pointer-events: none;
+}
+
+/*-----------------
+* animationParm
+------------------*/
+.--archive {
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+.--works {
+  opacity: 0;
+  transform: translate(-50%, 0) rotate(16deg);
+}
+.archive-image-bg,
+.works-image-bg {
+  opacity: 0;
+}
+
+.--current {
+  width: fit-content;
+  border-bottom: 1px #fff solid;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.js-delay {
+  opacity: 0;
+}

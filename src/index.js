@@ -77,9 +77,8 @@ class App {
 
   _setRenderer() {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    this.renderer.setClearColor(0xdad4cc, 1);
+    this.renderer.setClearColor(0x0a0a0a, 1);
     this.renderer.setSize(App.RENDERER_SETTING.width, App.RENDERER_SETTING.height);
-    // this.composer.setSize(App.RENDERER_SETTING.width, App.RENDERER_SETTING.height);
     const canvas = document.querySelector("#webgl");
     canvas.appendChild(this.renderer.domElement);
   }
@@ -93,7 +92,7 @@ class App {
     this.camera.position.set(App.CAMERA_PARAM.x, App.CAMERA_PARAM.y, App.CAMERA_PARAM.z);
     this.camera.lookAt(App.CAMERA_PARAM.lookAt);
     this.camera.updateProjectionMatrix();
-    this.controls = new OrbitControls(this.camera, document.body);
+    // this.controls = new OrbitControls(this.camera, document.body);
   }
 
   _setMesh() {
@@ -117,9 +116,9 @@ class App {
     this.scene.add(this.mesh);
   }
 
-  _setBox() {
-    // this.Boxgeometry = new THREE.CircleGeometry(0.2, 520);
-    this.Boxgeometry = new THREE.SphereGeometry(0.2, 200, 200, 200);
+  _setPlane() {
+    this.Boxgeometry = new THREE.PlaneGeometry(10.5, 10.5, 1000, 1000);
+    // this.Boxgeometry = new THREE.SphereGeometry(0.2, 200, 200, 200);
     this.Boxmaterial = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0.0 },
@@ -147,17 +146,17 @@ class App {
     this._setScene();
     this._setCamera();
     // this._setMesh();
-    this._setBox();
+    this._setPlane();
     this.initPost();
   }
 
   render() {
     requestAnimationFrame(this.render);
-    this.controls.update();
+    // this.controls.update();
     // this.mesh.material.uniforms.uTime.value += 0.005;
     this.Boxmaterial.uniforms.uTime.value += 0.002;
-    this.Boxmesh.rotation.x += 0.001;
-    this.Boxmesh.rotation.y += 0.001;
+    // this.Boxmesh.rotation.x += 0.001;
+    // this.Boxmesh.rotation.y += 0.001;
 
     // this.renderer.render(this.scene, this.camera);
     this.composer.render(this.scene, this.camera);

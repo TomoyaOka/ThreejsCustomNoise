@@ -4,14 +4,127 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ThreeJsImage</title>
-    <link rel="stylesheet" href="src/reset.css" />
-    <link rel="stylesheet" href="src/index.css" />
+    <title>Folio'23</title>
+    <link rel="stylesheet" href="src/css/index.css" />
+    <link rel="stylesheet" href="src/css/index-sp.css" />
   </head>
   <body>
+    <!-- opening -->
+    <div class="opening-filter">
+      <h1 class="site-title">
+        <span class="site-title--alphabet">p</span>
+        <span class="site-title--alphabet">a</span>
+        <span class="site-title--alphabet">r</span>
+        <span class="site-title--alphabet">m</span>
+      </h1>
+    </div>
+    <!-- /opening -->
+    <!-- header -->
+    <header class="ly-header js-delay">
+      <h1 class="ly-header__logo"></h1>
+      <div class="ly-header__pages">
+        <button class="--page-button --page-button-archive">archive</button>
+        <button class="--page-button --page-button-works">works</button>
+      </div>
+      <button class="ly-header__button">DETAIL</button>
+    </header>
+    <!-- / -->
+    <!-- main -->
+    <div class="ly-main js-delay">
+      <h2 class="ly-main__title">
+        <span>f</span>
+        <span>o</span>
+        <span>l</span>
+        <span>i</span>
+        <span>o</span>
+        <span>'</span>
+        <span>2</span>
+        <span>3</span>
+      </h2>
+      <!-- archive-area -->
+      <a href="" target="_blank" class="ly-main__link --archive">
+        <div class="ly-main__link-box">
+          <p class="ly-main__link-number">#<span></span></p>
+          <h3 class="ly-main__link-title"></h3>
+        </div>
+      </a>
+      <div class="archive-image-bg">
+        <img src="" alt="" class="archive-image" />
+      </div>
+      <!-- /archive-area -->
+      <!-- works-area -->
+      <a href="" target="_blank" class="ly-main__link --works">
+        <div class="ly-main__link-box">
+          <p class="ly-main__link-number">#<span></span></p>
+          <h3 class="ly-main__link-title"></h3>
+        </div>
+      </a>
+      <div class="works-image-bg">
+        <img src="" alt="" class="works-image" />
+      </div>
+      <!-- /works-area -->
+
+      <!--
+        arrow-area
+      -->
+      <div class="ly-main__buttons ly-main__buttons--archive">
+        <button class="ly-main__prev ly-main__prev--archive">←</button>
+        <button class="ly-main__next ly-main__next--archive">→</button>
+      </div>
+      <div class="ly-main__buttons ly-main__buttons--works">
+        <button class="ly-main__prev ly-main__prev--works">←</button>
+        <button class="ly-main__next ly-main__next--works">→</button>
+      </div>
+
+      <div class="ly-main__total ly-main__total--archive"><span class="--total-count"></span><span class="--total"></span></div>
+      <div class="ly-main__total ly-main__total--works"><span class="--total-count"></span><span class="--total"></span></div>
+    </div>
+    <!-- / -->
+    <!-- / -->
+
+    <div class="ly-detail-menu">
+      <div class="ly-detail-menu__box">
+        <h2 class="--name">
+          <span class="--hide"><span class="--down">MY NAME</span></span>
+        </h2>
+        <p class="--age">
+          <span class="--hide"><span class="--down">AGE25</span></span>
+        </p>
+      </div>
+      <div class="ly-detail-menu__position">
+        <h3>
+          <span class="--hide">
+            <span class="--down">
+              Flont-End<br />
+              developer
+            </span>
+          </span>
+        </h3>
+      </div>
+      <a href="#" class="ly-detail-menu__link"
+        ><span class="--hide"><span class="--down">SNS</span></span></a
+      >
+      <div class="ly-detail-menu__image">
+        <img src="./public/img02.png" alt="" />
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+      <div class="grid-box"></div>
+    </div>
     <div id="webgl"></div>
-    <canvas id="canvas"></canvas>
+    <div class="cursor"></div>
 
     <script type="module" src="/src/index.js"></script>
+    <script type="module" src="/src/app.js"></script>
   </body>
 </html>
